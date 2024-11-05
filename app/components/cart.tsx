@@ -33,17 +33,21 @@ function CartContent({ onClose }: { onClose?: () => void }) {
 
   const handleConfirmOrder = () => {
     setShowConfirmation(true);
-    onClose?.();
   };
 
   const handleStartNewOrder = () => {
     setShowConfirmation(false);
     dispatch({ type: "RESET" });
+    onClose?.();
+  };
+
+  const handleCloseConfirmation = () => {
+    setShowConfirmation(false);
   };
 
   return (
     <>
-      <ScrollArea className="h-[calc(100vh-12rem)] pr-4">
+      <ScrollArea className="h-[calc(100vh-20rem)] pr-4 lg:h-[calc(100vh-24rem)]">
         {state.items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8">
             <ShoppingCart className="h-12 w-12 text-[hsl(14,25%,72%)]" />
@@ -64,7 +68,7 @@ function CartContent({ onClose }: { onClose?: () => void }) {
                   />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-medium text-[hsl(14,65%,9%)]">
+                  <h4 className="font-medium text-[hsl(14,65%,9%)] dark:text-white">
                     {item.name}
                   </h4>
                   <div className="flex items-center gap-2">
@@ -130,7 +134,7 @@ function CartContent({ onClose }: { onClose?: () => void }) {
       {state.items.length > 0 && (
         <div className="space-y-4 pt-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[hsl(14,65%,9%)]">
+            <span className="text-sm font-medium text-[hsl(14,65%,9%)] dark:text-white">
               Order Total
             </span>
             <span className="text-lg font-bold text-[hsl(14,86%,42%)]">
@@ -157,15 +161,15 @@ function CartContent({ onClose }: { onClose?: () => void }) {
         </div>
       )}
 
-      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-        <DialogContent>
+      <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
+        <DialogContent className="sm:max-w-md dark:bg-[hsl(14,25%,12%)]">
           <DialogHeader>
             <DialogTitle className="text-center">Order Confirmed</DialogTitle>
             <DialogDescription className="text-center">
               We hope you enjoy your food!
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="max-h-[60vh] space-y-4 overflow-auto pr-4">
             {state.items.map((item) => (
               <div key={item.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -178,21 +182,21 @@ function CartContent({ onClose }: { onClose?: () => void }) {
                     />
                   </div>
                   <div>
-                    <p className="font-medium">{item.name}</p>
+                    <p className="font-medium dark:text-white">{item.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {item.quantity}x @ ${item.price.toFixed(2)}
                     </p>
                   </div>
                 </div>
-                <p className="font-bold">
+                <p className="font-bold dark:text-white">
                   ${(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))}
             <Separator />
             <div className="flex items-center justify-between">
-              <span className="font-medium">Order Total</span>
-              <span className="text-lg font-bold">
+              <span className="font-medium dark:text-white">Order Total</span>
+              <span className="text-lg font-bold dark:text-white">
                 ${state.total.toFixed(2)}
               </span>
             </div>
@@ -215,9 +219,9 @@ export function Cart({ variant = "mobile" }: CartProps) {
 
   if (variant === "desktop") {
     return (
-      <Card className="p-6">
+      <Card className="p-6 dark:bg-[hsl(14,25%,12%)]">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-[hsl(14,65%,9%)]">
+          <h2 className="text-xl font-bold text-[hsl(14,65%,9%)] dark:text-white">
             Your Cart ({state.items.reduce((acc, item) => acc + item.quantity, 0)})
           </h2>
         </div>
@@ -229,10 +233,10 @@ export function Cart({ variant = "mobile" }: CartProps) {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="relative">
-          <ShoppingCart className="h-4 w-4" />
+        <Button variant="outline" size="icon" className="relative h-10 w-10">
+          <ShoppingCart className="h-5 w-5" />
           {state.items.length > 0 && (
-            <span className="absolute -right-2 -top-2 h-5 w-5 rounded-full bg-[hsl(14,86%,42%)] text-xs text-white">
+            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[hsl(14,86%,42%)] text-xs font-medium text-white">
               {state.items.reduce((acc, item) => acc + item.quantity, 0)}
             </span>
           )}
@@ -240,7 +244,7 @@ export function Cart({ variant = "mobile" }: CartProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="text-[hsl(14,65%,9%)]">
+          <SheetTitle className="text-[hsl(14,65%,9%)] dark:text-white">
             Your Cart ({state.items.reduce((acc, item) => acc + item.quantity, 0)})
           </SheetTitle>
         </SheetHeader>

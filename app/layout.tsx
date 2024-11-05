@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Red_Hat_Text } from "next/font/google";
 import { CartProvider } from "./providers/cart-provider";
+import { ThemeProvider } from "./providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 const redHatText = Red_Hat_Text({
@@ -20,10 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={redHatText.className}>
-        <CartProvider>{children}</CartProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CartProvider>{children}</CartProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
